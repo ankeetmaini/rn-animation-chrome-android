@@ -1,11 +1,16 @@
-import React from "react";
+import React, { FunctionComponent } from "react";
 import { View, StyleSheet, Text } from "react-native";
-
-const Card = () => {
+type Props = {
+  index: number;
+};
+const Card: FunctionComponent<Props> = ({ index }) => {
   return (
-    <View style={[styles.container]}>
+    <View style={[styles.container]} pointerEvents="none">
       <View style={[styles.url]}>
         <Text>http://instagram.com/ankeetmaini</Text>
+      </View>
+      <View style={styles.body}>
+        <Text style={{ fontSize: 50 }}>{index}</Text>
       </View>
     </View>
   );
@@ -25,12 +30,17 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     elevation: 5,
-    ...StyleSheet.absoluteFillObject
+    backgroundColor: "#fff"
   },
   url: {
     borderColor: "#afafaf",
     borderWidth: 1,
     height: 30,
     padding: 8
+  },
+  body: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center"
   }
 });
