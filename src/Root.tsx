@@ -1,54 +1,54 @@
 import React, { useRef } from "react";
 import {
   StyleSheet,
-  Text,
-  View,
   SafeAreaView,
   ScrollView,
   Dimensions,
-  Animated
+  Animated,
+  PanResponder,
+  View
 } from "react-native";
 import Card from "./Card";
 
-const { height } = Dimensions.get("window");
-
+const TOTAL_CARDS = 15;
 export default function Root() {
   const animationValue = useRef(new Animated.Value(0)).current;
+  const panResponder = useRef(
+    PanResponder.create({
+      onMoveShouldSetPanResponder: () => true,
+      onPanResponderMove: (_, { dy }) => {
+        console.log(dy);
+      }
+    })
+  ).current;
+
+  animationValue.addListener(v => console.log("AnimationValue: ", v.value));
 
   return (
     <SafeAreaView style={styles.container}>
-      {Array.from({ length: 15 }).map((_, i) => {
-        const translateValue = animationValue.interpolate({
-          inputRange: [0, 1],
-          outputRange: [i * 2, 50 + i * 10],
-          extrapolate: "clamp"
-        });
-        return (
-          <Animated.View
-            key={i}
-            style={[
-              { transform: [{ translateY: translateValue }] },
-              StyleSheet.absoluteFill
-            ]}
-          >
-            <Card index={i} />
-          </Animated.View>
-        );
-      })}
-      <ScrollView
-        style={StyleSheet.absoluteFill}
-        // dependent on cards length actually
-        contentContainerStyle={{ height: height * 3 }}
-        onScroll={Animated.event([
-          {
-            nativeEvent: {
-              contentOffset: {
-                y: animationValue
-              }
-            }
-          }
-        ])}
-      />
+      <View
+        {...panResponder.panHandlers}
+        style={[StyleSheet.absoluteFill, { backgroundColor: "red" }]}
+      >
+        {Array.from({ length: TOTAL_CARDS }).map((_, i) => {
+          const translateValue = animationValue.interpolate({
+            inputRange: [0, 1],
+            outputRange: [-i * 2, -50 + i * 10],
+            extrapolateLeft: "clamp"
+          });
+          return (
+            <Animated.View
+              key={i}
+              style={[
+                { transform: [{ translateY: translateValue }] },
+                StyleSheet.absoluteFill
+              ]}
+            >
+              <Card index={i} />
+            </Animated.View>
+          );
+        })}
+      </View>
     </SafeAreaView>
   );
 }
@@ -56,9 +56,8 @@ export default function Root() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
     alignItems: "center",
     justifyContent: "center",
-    margin: 60
+    marginTop: 60
   }
 });
