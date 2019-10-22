@@ -7,7 +7,7 @@ const Card: FunctionComponent<Props> = ({ index }) => {
   return (
     <View style={[styles.container]} pointerEvents="none">
       <View style={[styles.url]}>
-        <Text>http://instagram.com/ankeetmaini</Text>
+        <Text>{index} - http://instagram.com/ankeetmaini</Text>
       </View>
       <View style={styles.body}>
         <Text style={{ fontSize: 50 }}>{index}</Text>
